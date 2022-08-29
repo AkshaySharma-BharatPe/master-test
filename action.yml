@@ -50,3 +50,9 @@ runs:
           base_branch: ${{ inputs.base_branch}}
           head_branch: ${{ inputs.head_branch}}
           token: ${{ inputs.token }}
+           
+      - uses: bharatpe/assets-checker@main
+        with:
+          token: ${{ inputs.token }}
+          target_folder: ${{ inputs.target_folder }}
+          thrashold_size: ${{ inputs.thrashold_size }}
