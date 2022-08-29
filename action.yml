@@ -34,9 +34,6 @@ inputs:
     required: true
     default: 'main'
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
-
   using: "composite"
   steps:  
       - uses: actions/checkout@master
