@@ -29,6 +29,8 @@ const main = async () => {
       auth: inputs.token,
     });
 
+    console.log('tetsinggg');
+
 
     let myOutput = '';
     let myError = '';
