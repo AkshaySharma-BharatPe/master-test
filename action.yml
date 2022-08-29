@@ -56,7 +56,7 @@ runs:
         id: lighthouseCheck
         with:
           urls: 'https://www.foo.software,https://www.google.com'
-          gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
+          gitHubAccessToken: ${{ inputs.token }}
           prCommentEnabled: true
           
       - name: Verify Lighthouse Check results
