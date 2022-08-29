@@ -42,14 +42,14 @@ runs:
         with:
           node-version: '16.16.0'
 
-      - uses: AkshaySharma-BharatPe/master-test@main
-        with:
-          install_command: ${{ inputs.install_command}}
-          build_command: ${{ inputs.build_command}}
-          build_path: ${{ inputs.build_path}}
-          base_branch: ${{ inputs.base_branch}}
-          head_branch: ${{ inputs.head_branch}}
-          token: ${{ inputs.token }}
+      # - uses: AkshaySharma-BharatPe/master-test@main
+      #   with:
+      #     install_command: ${{ inputs.install_command}}
+      #     build_command: ${{ inputs.build_command}}
+      #     build_path: ${{ inputs.build_path}}
+      #     base_branch: ${{ inputs.base_branch}}
+      #     head_branch: ${{ inputs.head_branch}}
+      #     token: ${{ inputs.token }}
 
       - name: Lighthouse
         uses: foo-software/lighthouse-check-action@master
