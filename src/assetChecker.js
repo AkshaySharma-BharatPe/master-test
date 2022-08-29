@@ -3,7 +3,7 @@ const github = require("@actions/github");
 const exec = require("@actions/exec");
 const { Octokit } = require("@octokit/rest");
 
-const main = async () => {
+export const assetChecker = async () => {
   try {
 
     const inputs = {
@@ -72,5 +72,3 @@ const main = async () => {
     core.setFailed(error.message);
   }
 };
-
-main();
