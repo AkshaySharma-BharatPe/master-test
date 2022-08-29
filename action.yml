@@ -36,3 +36,20 @@ inputs:
 runs:
   using: 'node16'
   main: 'dist/index.js'
+
+  using: "composite"
+  steps:  
+      - uses: actions/checkout@master
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16.16.0'
+
+      - uses: bharatpe/pr-bundle-analyzer@main
+        with:
+          install_command: ${{ inputs.install_command}}
+          build_command: ${{ inputs.build_command}}
+          build_path: ${{ inputs.build_path}}
+          base_branch: ${{ inputs.base_branch}}
+          head_branch: ${{ inputs.head_branch}}
+          token: ${{ secrets.GITHUB_TOKEN }}

@@ -13471,8 +13471,9 @@ const bundleAnalyzer = async() => {
 
 
 const main  = async() => {
-  await assetChecker();
-  await bundleAnalyzer();
+  // await assetChecker();
+  // await bundleAnalyzer();
+  console.log('build main');
 }
 
 main();
