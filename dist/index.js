@@ -13356,12 +13356,123 @@ const assetChecker = async () => {
   }
 };
 
+;// CONCATENATED MODULE: ./src/bundleAnanlyzer.js
+const bundleAnanlyzer_core = __nccwpck_require__(5127);
+const bundleAnanlyzer_github = __nccwpck_require__(3134);
+const { Octokit: bundleAnanlyzer_Octokit } = __nccwpck_require__(1563);
+const bundleAnanlyzer_exec = __nccwpck_require__(2049);
+
+const bundleAnalyzer = async() => {
+  function bytesToSize(bytes) {
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+    if (bytes === 0) return "0 Byte";
+    const i = parseInt(Math.floor(Math.log(Math.abs(bytes)) / Math.log(1024)));
+    return (bytes / Math.pow(1024, i)).toFixed(2) + " " + sizes[i];
+  }
+
+  try {
+    const inputs = {
+      token: bundleAnanlyzer_core.getInput("token"),
+      install_command: bundleAnanlyzer_core.getInput("install_command"),
+      build_command: bundleAnanlyzer_core.getInput("build_command"),
+      build_path: bundleAnanlyzer_core.getInput("build_path"),
+      base_branch: bundleAnanlyzer_core.getInput("base_branch"),
+      head_branch: bundleAnanlyzer_core.getInput("head_branch"),
+  };
+
+    const {
+      payload: { pull_request: pullRequest, repository },
+    } = bundleAnanlyzer_github.context;
+
+    if (!pullRequest) {
+      bundleAnanlyzer_core.error("This action only works on pull_request events");
+      return;
+    }
+
+    const { number: issueNumber } = pullRequest;
+    const { full_name: repoFullName } = repository;
+    const [owner, repo] = repoFullName.split("/");
+
+    const octokit = new bundleAnanlyzer_Octokit({
+      auth: inputs.token,
+    });
+
+    await bundleAnanlyzer_exec.exec(`git fetch`);
+    
+    const branches = [inputs.head_branch, inputs.base_branch];
+    const branchesStats = [];
+    const branchesHeading = [];
+
+    for (let item of branches) {
+      await bundleAnanlyzer_exec.exec(`git checkout ${item}`);
+      await bundleAnanlyzer_exec.exec(inputs.install_command);
+      await bundleAnanlyzer_exec.exec(inputs.build_command);
+
+      bundleAnanlyzer_core.setOutput(
+        "Building repo completed - 1st @ ",
+        new Date().toTimeString()
+      );
+
+      const outputOptions = {};
+      let sizeCalOutput = "";
+
+      outputOptions.listeners = {
+        stdout: (data) => {
+          sizeCalOutput += data.toString();
+        },
+        stderr: (data) => {
+          sizeCalOutput += data.toString();
+        },
+      };
+
+      await bundleAnanlyzer_exec.exec(`du ${inputs.build_path}`, null, outputOptions);
+      bundleAnanlyzer_core.setOutput("size", sizeCalOutput);
+
+      const arrayOutput = sizeCalOutput.split("\n");
+
+      const arrOp = arrayOutput.map((item) => {
+        const i = item.split(/(\s+)/);
+        branchesHeading.push(`${i[2]}`);
+        return parseInt(i[0]) * 1000;
+      });
+      branchesStats.push(arrOp);
+    }
+
+    const coverage = `|Files Type|New Stats (${
+      inputs.head_branch
+    })|Old Stats (${inputs.base_branch})|Differences (New - Old)|
+|-----|:-----:|:-----:|:-----:|
+|${branchesHeading[0]}|${bytesToSize(branchesStats[0][0])}|${bytesToSize(
+      branchesStats[1][0]
+    )}|${bytesToSize(branchesStats[0][0] - branchesStats[1][0])}|
+|${branchesHeading[1]}|${bytesToSize(branchesStats[0][1])}|${bytesToSize(
+      branchesStats[1][1]
+    )}|${bytesToSize(branchesStats[0][1] - branchesStats[1][1])}|
+|${branchesHeading[2]}|${bytesToSize(branchesStats[0][2])}|${bytesToSize(
+      branchesStats[1][2]
+    )}|${bytesToSize(branchesStats[0][2] - branchesStats[1][2])}|
+|${branchesHeading[3]}|${bytesToSize(branchesStats[0][3])}|${bytesToSize(
+      branchesStats[1][3]
+    )}|${bytesToSize(branchesStats[0][3] - branchesStats[1][3])}|
+`;
+
+    octokit.rest.issues.createComment({
+      owner,
+      repo,
+      issue_number: issueNumber,
+      body: coverage,
+    });
+  } catch (error) {
+    bundleAnanlyzer_core.setFailed(error.message);
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.js
 
 
+
 const main  = async() => {
-  console.log('main file');
   await assetChecker();
+  await bundleAnalyzer();
 }
 
 main();

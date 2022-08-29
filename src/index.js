@@ -1,8 +1,9 @@
 import { assetChecker } from "./assetChecker";
+import { bundleAnalyzer } from "./bundleAnanlyzer";
 
 const main  = async() => {
-  console.log('main file');
   await assetChecker();
+  await bundleAnalyzer();
 }
 
 main();
