@@ -42,20 +42,20 @@ runs:
         with:
           node-version: '16.16.0'
 
-      # - uses: AkshaySharma-BharatPe/master-test@main
-      #   with:
-      #     install_command: ${{ inputs.install_command}}
-      #     build_command: ${{ inputs.build_command}}
-      #     build_path: ${{ inputs.build_path}}
-      #     base_branch: ${{ inputs.base_branch}}
-      #     head_branch: ${{ inputs.head_branch}}
-      #     token: ${{ inputs.token }}
+      - uses: bharatpe/pr-bundle-analyzer@main
+        with:
+          install_command: ${{ inputs.install_command}}
+          build_command: ${{ inputs.build_command}}
+          build_path: ${{ inputs.build_path}}
+          base_branch: ${{ inputs.base_branch}}
+          head_branch: ${{ inputs.head_branch}}
+          token: ${{ inputs.token }}
 
       - name: Lighthouse
         uses: foo-software/lighthouse-check-action@master
         id: lighthouseCheck
         with:
-          urls: 'https://www.foo.software,https://www.google.com'
+          urls: 'https://www.google.com'
           gitHubAccessToken: ${{ inputs.token }}
           prCommentEnabled: true
           
@@ -63,7 +63,7 @@ runs:
         uses: foo-software/lighthouse-check-status-action@master
         with:
           lighthouseCheckResults: ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults }}
-          minAccessibilityScore: "90"
+          minAccessibilityScore: "50"
           minBestPracticesScore: "50"
           minPerformanceScore: "50"
           minProgressiveWebAppScore: "50"
