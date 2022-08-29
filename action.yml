@@ -13,6 +13,26 @@ inputs:
   token:
     description: 'The token to use to access the GitHub API'
     required: true
+  install_command:
+    description: 'cli command for installing dependencies ex npm install'
+    required: true
+    default: 'npm install'
+  build_command:
+    description: 'cli command for building repository ex npm run build'
+    required: true
+    default: 'npm run build'
+  build_path:
+    description: 'output path for the build package'
+    required: true
+    default: 'build/static'
+  base_branch:
+    description: 'Branch on which your feature branch will get merge ex. main'
+    required: true
+    default: 'main'
+  head_branch:
+    description: 'Branch in which your new changes exists ex. dev'
+    required: true
+    default: 'main'
 runs:
   using: 'node16'
   main: 'dist/index.js'
