@@ -49,4 +49,4 @@ runs:
           build_path: ${{ inputs.build_path}}
           base_branch: ${{ inputs.base_branch}}
           head_branch: ${{ inputs.head_branch}}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ inputs.token }}
